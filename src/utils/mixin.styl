@@ -1,0 +1,30 @@
+.moveUp-enter-active,
+.moveUp-leave-active,
+.moveDown-enter-active,
+.moveDown-leave-active
+  transition: all .35s
+
+.moveUp-enter-to,
+.moveUp-leave,
+.moveDown-enter-to,
+.moveDown-leave
+  transform: translate3d(0, 0, 0)
+
+.moveUp-enter, .moveUp-leave-to
+  transform: translate3d(0, -60px, 0)
+
+.moveDown-enter, .moveDown-leave-to
+  transform: translate3d(0, 60px, 0)
+
+.operation-enter-active,
+.operation-leave-active
+  transform-origin: right top 0
+  transition: all .3s
+
+.operation-enter-to, .operation-leave
+  transform: scale(1)
+  opacity: 1
+
+.operation-enter, .operation-leave-to
+  transform: scale(0)
+  opacity: 0
