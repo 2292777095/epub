@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
@@ -22,4 +23,12 @@
     color #2c3e50
     &.router-link-exact-active
       color #42b983
+=======
+    <div id="app">
+        <router-view/>
+    </div>
+</template>
+
+<style lang="stylus">
+>>>>>>> dcdf8ce5da792a47ec9c880aadc7ddfb92e93057
 </style>

@@ -1,10 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+<<<<<<< HEAD
 import Home from './views/Home.vue'
+=======
+>>>>>>> dcdf8ce5da792a47ec9c880aadc7ddfb92e93057
 
 Vue.use(Router)
 
 export default new Router({
+<<<<<<< HEAD
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -22,4 +26,18 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     }
   ]
+=======
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes: [
+        {
+            path: '/',
+            redirect: 'read'
+        },
+        {
+            path: '/read',
+            component: () => import('@/views/read')
+        }
+    ]
+>>>>>>> dcdf8ce5da792a47ec9c880aadc7ddfb92e93057
 })
