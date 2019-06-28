@@ -1,93 +1,101 @@
 <template>
     <transition name="moveDown">
-        <div class="setting-wrapper" v-show="toggle == 1">
-            <div class="progress-wrapper">
-                <span>上一章</span>
-                <input type="range"
-                       min="0"
-                       max="100"
-                       step="1"
-                       ref="inputRange"
-                       @change="changeProgress($event.target.value)"
-                       @input="changeProgress($event.target.value)"
-                       :value="progress"
-                       :disabled="disabled">
-                <span>下一章</span>
-            </div>
+        <div class="footer-wrapper" v-show="toggle == 1">
+            <ul class="theme-wrapper">
+                <li class="item"
+                    v-for="(themeItem, index) in themeList"
+                    @click="changeTheme(themeItem)"
+                    :key="index"
+                    :class="{'active': themeItem.name === theme}">
+                    <span :style="{background: themeItem.style.body.background}"></span>
+                </li>
+            </ul>
+            <ul class="setting-wrapper">
+                <li class="item">
+                    <i class="icon-catalog"></i>
+                    <span>查看目录</span>
+                </li>
+                <li class="item">
+                    <i class="icon-add-bookMark"></i>
+                    <span>添加书签</span>
+                </li>
+                <li class="item">
+                    <i class="icon-sunlight"></i>
+                    <span>白天模式</span>
+                </li>
+                <li class="item">
+                    <i class="icon-out"></i>
+                    <span>退出阅读</span>
+                </li>
+            </ul>
         </div>
     </transition>
 </template>
 
 <script type="text/ecmascript-6">
+    import {themeList} from "../../utils/book"
     import {bookMixin} from "../../utils/mixin"
 
     export default {
         data() {
             return {
-                progress: 0,
-                disabled: true
+                themeList
             }
         },
-        mounted() {
-            this.currentBook.ready.then(() => {
-                this.disabled = false
-            })
-        },
+        mixins: [bookMixin],
         methods: {
-            changeProgress(val) {
-                this.progress = val
-                this.changeProgressStyle()
-                this.setBookProgress()
-            },
-            // 设置进度条样式
-            changeProgressStyle() {
-                this.$refs.inputRange.style.backgroundSize = this.progress + '% 100%'
-            },
-            // 设置进度
-            setBookProgress() {
-                let cfi = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
-                console.log(this.currentBook.rendition)
-                this.display(cfi)
+            changeTheme(theme) {
+                this.setTheme(theme.name).then(() => {
+                    this.currentBook.rendition.themes.select(this.theme)
+                })
             }
-        },
-        mixins: [bookMixin]
+        }
     }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-    .setting-wrapper
+    .footer-wrapper
         position: absolute
-        left: 0
-        bottom: 0
         width: 100%
+        bottom: 0
+        left: 0
         z-index: 999
-        background: rgba(41, 37, 36, .95)
-        padding: 15px
         box-sizing: border-box
-        .progress-wrapper
+        background: #FFF
+        .theme-wrapper
             display: flex
             justify-content: space-between
-            align-items: center
-            span
-                font-size: 14px
-                color: #c0bebf
-            input[type="range"]
-                outline: none
-                -webkit-appearance: none
-                -moz-appearance: none
-                appearance: none
-                flex: 1
-                margin: 0 20px
-                height: 3px
-                border-radius: 4px
-                background: linear-gradient(to right, #FFF, #FFF) no-repeat, #5f5b5a
-                background-size: 0 100%
-                &::-webkit-slider-thumb
-                    width: 16px
-                    height: 16px
+            padding: 15px
+            .item
+                border: 1px solid #FFF
+                padding: 5px
+                width: 40px
+                height: 40px
+                border-radius: 50%
+                box-sizing: border-box
+                &.active
+                    border-color: #3d3d3d
+                span
+                    display: block
+                    width: 100%
+                    height: 100%
                     border-radius: 50%
-                    background: #FFF
-                    -webkit-appearance: none
-                    -moz-appearance: none
-                    appearance: none
+        .setting-wrapper
+            display: flex
+            align-items: center
+            border-top: 1px solid #EEE
+            padding: 15px
+            .item
+                flex: 1
+                text-align: center
+                i
+                    display: block
+                    color: #333
+                    font-size: 20px
+                span
+                    display: block
+                    color: #333
+                    font-size: 12px
+                    margin-top: 10px
+
 </style>

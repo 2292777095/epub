@@ -5,18 +5,17 @@ export const bookMixin = {
         ...mapGetters([
             'toggle',
             'currentBook',
-            'currentRendition',
+            'theme',
+            'disabledAvailable',
         ])
     },
     methods: {
         ...mapActions([
             'setToggle',
             'setBook',
-            'setRendition',
+            'setTheme',
+            'setDisabledAvailable',
         ]),
-        refreshLocation() {
-
-        },
         display(target, callback) {
             if(target){
                 this.currentBook.rendition.display(target).then(() => {

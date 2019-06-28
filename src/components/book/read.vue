@@ -13,7 +13,9 @@
 
 <script type="text/ecmascript-6">
     import {bookMixin} from '../../utils/mixin'
+    import {themeList} from "../../utils/book"
     import Epub from 'epubjs'
+
     global.ePub = Epub;
 
     export default {
@@ -40,12 +42,18 @@
                     height: window.innerHeight,
                     method: 'default'
                 })
+            },
+            initTheme() {
+                themeList.forEach(item => {
+                    this.currentBook.rendition.themes.register(item.name, item.style)
+                })
             }
         },
         mounted() {
             this.book = new Epub("http://localhost:8081/《求魔》_qinkan.net.epub");
             this.setBook(this.book)
             this.initRendition()
+            this.initTheme()
             this.display()
         }
     }
