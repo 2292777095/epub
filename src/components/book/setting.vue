@@ -1,6 +1,16 @@
 <template>
     <transition name="moveDown">
         <div class="footer-wrapper" v-show="toggle == 1">
+            <div class="setting-fontSize-wrapper">
+                <i class="icon-reduce"></i>
+                <ul class="fontSize-list-wrapper">
+                    <li v-for="fontSizeItem in fontSizeList">
+                        <span @click="changeFontSize(fontSizeItem.fontSize)"></span>
+                        <i class="select" :class="{'selected': fontSize === fontSizeItem.fontSize}"></i>
+                    </li>
+                </ul>
+                <i style="font-size: 20px;" class="icon-increase"></i>
+            </div>
             <ul class="theme-wrapper">
                 <li class="item"
                     v-for="(themeItem, index) in themeList"
@@ -11,7 +21,7 @@
                 </li>
             </ul>
             <ul class="setting-wrapper">
-                <li class="item">
+                <li class="item" @click="setToggle(2)">
                     <i class="icon-catalog"></i>
                     <span>查看目录</span>
                 </li>
@@ -19,9 +29,9 @@
                     <i class="icon-add-bookMark"></i>
                     <span>添加书签</span>
                 </li>
-                <li class="item">
-                    <i class="icon-sunlight"></i>
-                    <span>白天模式</span>
+                <li class="item" @click="switchTheme">
+                    <i :class="theme !== 'brown' ? 'icon-night' : 'icon-sunlight'"></i>
+                    <span>{{theme !== 'brown' ? '夜间模式' : '日间模式'}}</span>
                 </li>
                 <li class="item">
                     <i class="icon-out"></i>
@@ -33,13 +43,15 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {themeList} from "../../utils/book"
+    import {themeList, fontSizeList} from "../../utils/book"
     import {bookMixin} from "../../utils/mixin"
+    import {bookLocalStorage} from "../../utils/localStorage"
 
     export default {
         data() {
             return {
-                themeList
+                themeList,
+                fontSizeList
             }
         },
         mixins: [bookMixin],
@@ -47,6 +59,20 @@
             changeTheme(theme) {
                 this.setTheme(theme.name).then(() => {
                     this.currentBook.rendition.themes.select(this.theme)
+                    bookLocalStorage.setBookInfoTheme(this.bookName, theme.name)
+                })
+            },
+            changeFontSize(fontSize) {
+                this.setFontSize(fontSize).then(() => {
+                    this.currentBook.rendition.themes.fontSize(fontSize + 'px')
+                    bookLocalStorage.setBookInfoFontSize(this.bookName, fontSize)
+                })
+            },
+            switchTheme() {
+                let isNight = this.theme !== 'brown' ? 'brown' : 'default'
+                this.setTheme(isNight).then(() => {
+                    this.currentBook.rendition.themes.select(isNight)
+                    bookLocalStorage.setBookInfoTheme(this.bookName, isNight)
                 })
             }
         }
@@ -98,4 +124,45 @@
                     font-size: 12px
                     margin-top: 10px
 
+        .setting-fontSize-wrapper
+            display: flex
+            padding: 15px
+            justify-content: space-between
+            align-items: flex-end
+            .fontSize-list-wrapper
+                display: flex
+                flex: 1
+                margin: 0 10px
+                height: 10px
+                border-bottom: 1px solid #D5D5D5
+                li
+                    position: relative
+                    flex: 1
+                    span
+                        display: block
+                        width: 10px
+                        height: 100%
+                        margin: 0 auto
+                        text-align: center
+                        &:after
+                            display: block
+                            content: ''
+                            width: 1px
+                            height: 100%
+                            background: #D5D5D5
+                            margin: 0 auto
+                    .select
+                        position: absolute
+                        top: 50%
+                        left: 50%
+                        display: none
+                        width: 16px
+                        height: 16px
+                        margin: -8px 0 0 -8px
+                        border-radius: 50%
+                        border: 1px solid #EEE
+                        box-shadow: 0 3px 3px rgba(0, 0, 0, .5)
+                        background: #FFF
+                        &.selected
+                            display: block
 </style>

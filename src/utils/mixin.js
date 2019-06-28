@@ -6,7 +6,12 @@ export const bookMixin = {
             'toggle',
             'currentBook',
             'theme',
-            'disabledAvailable',
+            'fontSize',
+            'bookName',
+            'bookLoading',
+            'cover',
+            'metadata',
+            'navigation',
         ])
     },
     methods: {
@@ -14,7 +19,12 @@ export const bookMixin = {
             'setToggle',
             'setBook',
             'setTheme',
-            'setDisabledAvailable',
+            'setFontSize',
+            'setBookName',
+            'setBookLoading',
+            'setCover',
+            'setMetadata',
+            'setNavigation'
         ]),
         display(target, callback) {
             if(target){

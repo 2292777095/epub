@@ -14,6 +14,7 @@
 <script type="text/ecmascript-6">
     import {bookMixin} from '../../utils/mixin'
     import {themeList} from "../../utils/book"
+    import {bookLocalStorage} from "../../utils/localStorage"
     import Epub from 'epubjs'
 
     global.ePub = Epub;
@@ -47,14 +48,34 @@
                 themeList.forEach(item => {
                     this.currentBook.rendition.themes.register(item.name, item.style)
                 })
+            },
+            parseBook() {
+                this.book.loaded.cover.then(cover => {
+                    this.book.archive.createUrl(cover).then(url => {
+                        this.setCover(url)
+                    })
+                })
+                this.book.loaded.metadata.then(metadata => {
+                    this.setMetadata(metadata)
+                })
+                this.book.loaded.navigation.then(navigation => {
+                    this.setNavigation(navigation)
+                })
             }
         },
         mounted() {
-            this.book = new Epub("http://localhost:8081/《求魔》_qinkan.net.epub");
-            this.setBook(this.book)
+            const bookName = "《求魔》_qinkan.net"
+            this.book = new Epub(`http://localhost:8080/${bookName}.epub`)
+            this.setBook(this.book).then(() => {
+                this.setBookName(bookName)
+                bookLocalStorage.setBookInfo(bookName)
+            })
             this.initRendition()
             this.initTheme()
-            this.display()
+            this.parseBook()
+            this.display(null, () => {
+                this.setBookLoading(true)
+            })
         }
     }
 </script>

@@ -3,6 +3,7 @@
         <book-header></book-header>
         <book-view></book-view>
         <book-setting></book-setting>
+        <book-slide></book-slide>
     </div>
 </template>
 
@@ -10,12 +11,14 @@
     import bookHeader from '@/components/book/header'
     import bookView from '@/components/book/read'
     import bookSetting from '@/components/book/setting'
+    import bookSlide from '@/components/book/slide'
 
     export default {
         components: {
             bookHeader,
             bookView,
-            bookSetting
+            bookSetting,
+            bookSlide
         }
     }
 </script>
