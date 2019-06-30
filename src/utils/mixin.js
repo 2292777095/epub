@@ -1,4 +1,5 @@
 import {mapGetters, mapActions} from 'vuex'
+import {bookLocalStorage} from './localStorage'
 
 export const bookMixin = {
     computed: {
@@ -26,6 +27,13 @@ export const bookMixin = {
             'setMetadata',
             'setNavigation'
         ]),
+        refreshLocation() {
+            const currentLocation = this.currentBook.rendition.currentLocation()
+            if(currentLocation && currentLocation.start){
+                let startCfi = currentLocation.start.cfi
+                bookLocalStorage.setBookInfoStartCfi(this.bookName, startCfi)
+            }
+        },
         display(target, callback) {
             if(target){
                 this.currentBook.rendition.display(target).then(() => {

@@ -13,18 +13,21 @@
 
 <script type="text/ecmascript-6">
     import {bookMixin} from '../../utils/mixin'
-    import {themeList} from "../../utils/book"
+    import {themeList, fontSizeList} from "../../utils/book"
     import {bookLocalStorage} from "../../utils/localStorage"
     import Epub from 'epubjs'
 
     global.ePub = Epub;
+    const bookName = "《求魔》_qinkan.net"
 
     export default {
         mixins: [bookMixin],
         methods: {
             prev(){
                 if(this.rendition){
-                    this.rendition.prev()
+                    this.rendition.prev().then(() => {
+                        this.refreshLocation()
+                    })
                     this.setToggle(0)
                 }
             },
@@ -33,20 +36,25 @@
             },
             next(){
                 if(this.rendition){
-                    this.rendition.next()
+                    this.rendition.next().then(() => {
+                        this.refreshLocation()
+                    })
                     this.setToggle(0)
                 }
             },
-            initRendition() {
-                this.rendition = this.book.renderTo('read', {
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                    method: 'default'
+            initFontSize() {
+                const fontSize = bookLocalStorage.getBookInfoFontSize(this.bookName)
+                this.setFontSize(fontSize ? fontSize : fontSizeList[2].fontSize).then(() => {
+                    this.rendition.themes.fontSize(fontSize)
+                    this.rendition.themes.fontSize(fontSize ? fontSize : fontSizeList[2].fontSize)
+                    !fontSize && bookLocalStorage.setBookInfoFontSize(this.bookName, fontSizeList[2].fontSize)
                 })
             },
             initTheme() {
-                themeList.forEach(item => {
-                    this.currentBook.rendition.themes.register(item.name, item.style)
+                const theme = bookLocalStorage.getBookInfoTheme(this.bookName)
+                this.setTheme(theme ? theme : themeList[0].name).then(() => {
+                    this.rendition.themes.select(theme ? theme : themeList[0].name)
+                    !theme && bookLocalStorage.setBookInfoTheme(this.bookName, themeList[0].name)
                 })
             },
             parseBook() {
@@ -58,24 +66,35 @@
                 this.book.loaded.metadata.then(metadata => {
                     this.setMetadata(metadata)
                 })
-                this.book.loaded.navigation.then(navigation => {
-                    this.setNavigation(navigation)
+                this.book.loaded.navigation.then(nav => {
+                    this.setNavigation(nav.toc)
+                }).then(() => {
+                    this.setBookLoading(true)
                 })
-            }
+            },
+            initRendition() {
+                this.rendition = this.book.renderTo('read', {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    method: 'default'
+                })
+                themeList.forEach(item => {
+                    this.rendition.themes.register(item.name, item.style)
+                })
+                console.log(this.book.locations)
+                this.display(null, () => {
+                    this.initTheme()
+                    this.initFontSize()
+                    this.parseBook()
+                })
+            },
         },
         mounted() {
-            const bookName = "《求魔》_qinkan.net"
             this.book = new Epub(`http://localhost:8080/${bookName}.epub`)
-            this.setBook(this.book).then(() => {
-                this.setBookName(bookName)
-                bookLocalStorage.setBookInfo(bookName)
-            })
+            this.setBook(this.book)
+            this.setBookName(bookName)
             this.initRendition()
-            this.initTheme()
-            this.parseBook()
-            this.display(null, () => {
-                this.setBookLoading(true)
-            })
+            bookLocalStorage.setBookInfo(bookName)
         }
     }
 </script>
@@ -94,4 +113,6 @@
             &>div
                 flex: 1
                 height: 100%
+                &:nth-of-type(2)
+                    flex: 2
 </style>

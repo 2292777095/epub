@@ -26,7 +26,19 @@ export const bookLocalStorage = {
     setBookInfoFontSize(bookName, fontSize) {
         this.setBookInfo(bookName, 'fontSize', fontSize)
     },
+    getBookInfoFontSize(bookName) {
+        return this.getBookInfo(bookName, 'fontSize')
+    },
     setBookInfoTheme(bookName, theme) {
         this.setBookInfo(bookName, 'theme', theme)
+    },
+    getBookInfoTheme(bookName) {
+        return this.getBookInfo(bookName, 'theme')
+    },
+    setBookInfoStartCfi(bookName, startCfi) {
+        this.setBookInfo(bookName, 'startCfi', startCfi)
+    },
+    getBookInfoStartCfi(bookName) {
+        return this.getBookInfo(bookName, 'startCfi')
     }
 }

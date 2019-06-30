@@ -1,7 +1,7 @@
 <template>
     <transition name="moveUp">
-        <div class="header-wrapper" :style="{'background': themeStyle.background}" v-show="bookLoading == true">
-            <p class="chapter-title" :style="{ 'color': themeStyle.color}">header</p>
+        <div class="header-wrapper" v-show="bookLoading == true">
+            <p class="chapter-title">header</p>
         </div>
     </transition>
 </template>
@@ -10,45 +10,7 @@
     import {bookMixin} from "../../utils/mixin"
 
     export default {
-        mixins: [bookMixin],
-        data() {
-            return {
-                themeStyle: {
-                    background: '',
-                    color: ''
-                }
-            }
-        },
-        watch: {
-            theme(newVal) {
-                switch (newVal){
-                    case 'default':
-                        this.themeStyle.background = '#f7f7ef';
-                        this.themeStyle.color = '#333';
-                        break;
-                    case 'orange':
-                        this.themeStyle.background = '#efdfbd';
-                        this.themeStyle.color = '#333';
-                        break;
-                    case 'green':
-                        this.themeStyle.background = '#beccbd';
-                        this.themeStyle.color = '#333';
-                        break;
-                    case 'pink':
-                        this.themeStyle.background = '#e6cece';
-                        this.themeStyle.color = '#333';
-                        break;
-                    case 'brown':
-                        this.themeStyle.background = '#292421';
-                        this.themeStyle.color = '#999';
-                        break;
-                    default:
-                        this.themeStyle.background = '#f7f7ef';
-                        this.themeStyle.color = '#333';
-                        break;
-                }
-            }
-        }
+        mixins: [bookMixin]
     }
 </script>
 

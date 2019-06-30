@@ -14,8 +14,8 @@
             :bottom="61">
             <div class="navigation-list-wrapper">
                 <ul>
-                    <li class="navigation-item" v-for="navigationItem in navigation">
-                        <span>{{navigationItem.label}}</span>
+                    <li class="navigation-item" v-for="(item, index) in navigation" :key="index" @click="navigateTo(item.href)">
+                        <span>{{`[ ${index} ]`}}<i>{{item.label}}</i></span>
                     </li>
                 </ul>
             </div>
@@ -29,11 +29,15 @@
 
     export default {
         mixins: [bookMixin],
-        mounted() {
-            console.log(this.navigation && this.navigation)
-        },
         components: {
             Scroll
+        },
+        methods: {
+            navigateTo(href) {
+                this.setToggle(0)
+                this.display(href)
+                this.refreshLocation()
+            }
         }
     }
 </script>
@@ -68,5 +72,21 @@
         .navigation-list-wrapper
             flex: 1
             box-sizing: border-box
-            padding: 20px
+            padding: 0 20px
+            .navigation-item
+                line-height: 35px
+                font-size: 14px
+                width: 100%
+                span
+                    display: block
+                    width: 100%
+                    overflow: hidden
+                    white-space: nowrap
+                    -ms-text-overflow: ellipsis
+                    text-overflow: ellipsis
+                    color: #333
+                    i
+                        margin-left: 8px
+                    &.actived
+                        color: #4d96f2
 </style>
