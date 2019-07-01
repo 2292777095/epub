@@ -68,8 +68,6 @@
                 })
                 this.book.loaded.navigation.then(nav => {
                     this.setNavigation(nav.toc)
-                }).then(() => {
-                    this.setBookLoading(true)
                 })
             },
             initRendition() {
@@ -81,11 +79,13 @@
                 themeList.forEach(item => {
                     this.rendition.themes.register(item.name, item.style)
                 })
-                console.log(this.book.locations)
-                this.display(null, () => {
+                const startCfi = bookLocalStorage.getBookInfoStartCfi(this.bookName)
+                this.display(startCfi ? startCfi : null, () => {
                     this.initTheme()
                     this.initFontSize()
                     this.parseBook()
+                    this.setSection(this.rendition.currentLocation().start.index)
+                    this.setBookLoading(false)
                 })
             },
         },

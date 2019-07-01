@@ -13,6 +13,7 @@ export const bookMixin = {
             'cover',
             'metadata',
             'navigation',
+            'section',
         ])
     },
     methods: {
@@ -25,13 +26,15 @@ export const bookMixin = {
             'setBookLoading',
             'setCover',
             'setMetadata',
-            'setNavigation'
+            'setNavigation',
+            'setSection',
         ]),
         refreshLocation() {
             const currentLocation = this.currentBook.rendition.currentLocation()
             if(currentLocation && currentLocation.start){
                 let startCfi = currentLocation.start.cfi
                 bookLocalStorage.setBookInfoStartCfi(this.bookName, startCfi)
+                this.setSection(currentLocation.start.index)
             }
         },
         display(target, callback) {

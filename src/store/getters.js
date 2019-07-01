@@ -8,6 +8,7 @@ const bookStore = {
     cover: state => state.bookStore.cover,
     metadata: state => state.bookStore.metadata,
     navigation: state => state.bookStore.navigation,
+    section: state => state.bookStore.section,
 }
 
 export default  bookStore

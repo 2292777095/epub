@@ -1,21 +1,33 @@
 <template>
     <div class="navigation-wrapper">
+        <div class="book-search-wrapper">
+            <div class="book-search-box">
+                <i class="icon-search"></i>
+                <input @change="doSearch" type="text" placeholder="请输入搜索关键字" :value="searchText">
+                <i v-show="closeShow" class="icon-close"></i>
+            </div>
+        </div>
         <div class="book-info-wrapper">
             <div class="info-wrapper">
                 <img class="cover" :src="cover" alt="">
                 <div class="info-text">
                     <h4>{{metadata && metadata.title}}</h4>
-                    <p>{{metadata && metadata.creator}}</p>
+                    <p>作者：{{metadata && metadata.creator}}</p>
                 </div>
             </div>
         </div>
         <Scroll
-            :top="106"
-            :bottom="61">
+            :top="154"
+            :bottom="61"
+            ref="scrollWrapper">
             <div class="navigation-list-wrapper">
                 <ul>
-                    <li class="navigation-item" v-for="(item, index) in navigation" :key="index" @click="navigateTo(item.href)">
-                        <span>{{`[ ${index} ]`}}<i>{{item.label}}</i></span>
+                    <li class="navigation-item"
+                        :class="{'actived': index === section}"
+                        v-for="(item, index) in navigation"
+                        :key="index"
+                        @click.stop="navigateTo($event, item.href)">
+                        {{`[ ${index} ]&nbsp;&nbsp;${item.label}`}}
                     </li>
                 </ul>
             </div>
@@ -29,15 +41,43 @@
 
     export default {
         mixins: [bookMixin],
+        data() {
+            return {
+                closeShow: false,
+                searchText: ''
+            }
+        },
         components: {
             Scroll
         },
         methods: {
-            navigateTo(href) {
-                this.setToggle(0)
-                this.display(href)
-                this.refreshLocation()
+            navigateTo(e, href) {
+                let boxHeight = (window.innerHeight - 215) / 2,
+                    offsetTop = e.target.offsetTop
+
+                this.setToggle(0).then(() => {
+                    this.display(href, () => {
+                        this.refreshLocation()
+                        if(offsetTop - boxHeight > boxHeight){
+                            this.navScrollTo(offsetTop - boxHeight)
+                        }
+                    })
+                })
+            },
+            doSearch(e) {
+                this.searchText = e.target.value
+            },
+            navScrollTo(y) {
+                this.$refs.scrollWrapper.scrollTo(0, y)
             }
+        },
+        mounted() {
+            this.$nextTick(() => {
+                const scrollActived = document.querySelector('li.actived')
+                if(scrollActived){
+                    console.log(scrollActived.offsetTop)
+                }
+            })
         }
     }
 </script>
@@ -47,6 +87,31 @@
         display: flex
         flex-direction: column
         height: 100%
+        .book-search-wrapper
+            padding: 15px 15px 0
+            .book-search-box
+                display: flex
+                justify-content: left
+                align-items: center
+                border: 1px solid #EEE
+                padding: 2px 15px
+                i
+                    color: #BBB
+                    font-size: 14px
+                    &.icon-close
+                        margin-left: 8px
+                input
+                    flex: 1
+                    border: none
+                    background: none
+                    height: 25px
+                    margin-left: 8px
+                    font-size: 14px
+                    color: #666
+                    &:focus
+                        outline: none
+                    &::placeholder
+                        color: #999
         .book-info-wrapper
             flex: 0 0 105px
             box-sizing: border-box
@@ -54,39 +119,34 @@
             border-bottom: 1px solid #EEE
             .info-wrapper
                 display: flex
+                align-items: center
                 .cover
                     display: block
                     width: 60px
                     height: 75px
                     margin-right: 20px
                 .info-text
-                    display: flex
-                    flex-direction: column
-                    justify-content: space-between
                     h4
                         color: #333
                         font-size: 16px
+                        margin-bottom: 6px
                     p
                         color: #666
-                        font-size: 14px
+                        font-size: 12px
         .navigation-list-wrapper
             flex: 1
             box-sizing: border-box
             padding: 0 20px
             .navigation-item
-                line-height: 35px
-                font-size: 14px
+                display: block
                 width: 100%
-                span
-                    display: block
-                    width: 100%
-                    overflow: hidden
-                    white-space: nowrap
-                    -ms-text-overflow: ellipsis
-                    text-overflow: ellipsis
-                    color: #333
-                    i
-                        margin-left: 8px
-                    &.actived
-                        color: #4d96f2
+                color: #333
+                font-size: 14px
+                line-height: 35px
+                overflow: hidden
+                white-space: nowrap
+                -ms-text-overflow: ellipsis
+                text-overflow: ellipsis
+                &.actived
+                    color: #4d96f2
 </style>

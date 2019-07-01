@@ -130,20 +130,30 @@
             justify-content: space-between
             align-items: flex-end
             .fontSize-list-wrapper
+                position: relative
                 display: flex
                 flex: 1
-                margin: 0 10px
+                justify-content: space-between
+                margin: 0 25px
                 height: 10px
-                border-bottom: 1px solid #D5D5D5
+                &:after
+                    display: block
+                    position: absolute
+                    top: 50%
+                    left: 0
+                    content: ''
+                    width: 100%
+                    height: 1px
+                    background: #D5D5D5
                 li
                     position: relative
-                    flex: 1
                     span
                         display: block
-                        width: 10px
                         height: 100%
                         margin: 0 auto
                         text-align: center
+                        position: relative
+                        z-index: 2
                         &:after
                             display: block
                             content: ''
@@ -163,6 +173,8 @@
                         border: 1px solid #EEE
                         box-shadow: 0 3px 3px rgba(0, 0, 0, .5)
                         background: #FFF
+                        box-sizing: border-box
                         &.selected
                             display: block
+                            z-index: 2
 </style>

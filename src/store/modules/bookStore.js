@@ -5,10 +5,11 @@ const bookStore = {
         theme: 'default',
         fontSize: 16,
         bookName: '',
-        bookLoading: false,
+        bookLoading: true,
         cover: "",
         metadata: null,
-        navigation: null
+        navigation: null,
+        section: null
     },
     mutations: {
         'setToggle': (state, toggle) => state.toggle = toggle,
@@ -20,6 +21,7 @@ const bookStore = {
         'setCover': (state, cover) => state.cover = cover,
         'setMetadata': (state, metadata) => state.metadata = metadata,
         'setNavigation': (state, navigation) => state.navigation = navigation,
+        'setSection': (state, section) => state.section = section,
     }
 };
 
