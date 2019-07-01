@@ -25,8 +25,8 @@
                     <li class="navigation-item"
                         :class="{'actived': index === section}"
                         v-for="(item, index) in navigation"
-                        :key="index"
-                        @click.stop="navigateTo($event, item.href)">
+                        @click.stop="navigateTo($event, item.href)"
+                        v-navigationItemLoad="index">
                         {{`[ ${index} ]&nbsp;&nbsp;${item.label}`}}
                     </li>
                 </ul>
@@ -50,6 +50,24 @@
         components: {
             Scroll
         },
+        directives: {
+            navigationItemLoad: {
+                inserted: function(el, binding, vnode) {
+                    const selected = el
+                    let boxHeight = (window.innerHeight - 215) / 2,
+                        offsetTop = null
+
+                    if(selected) {
+                        if(selected.className === "navigation-item actived") {
+                            offsetTop = binding.value * 35
+                            if(offsetTop - boxHeight > boxHeight){
+                                vnode.context.navScrollTo(offsetTop - boxHeight)
+                            }
+                        }
+                    }
+                }
+            }
+        },
         methods: {
             navigateTo(e, href) {
                 let boxHeight = (window.innerHeight - 215) / 2,
@@ -58,8 +76,10 @@
                 this.setToggle(0).then(() => {
                     this.display(href, () => {
                         this.refreshLocation()
-                        if(offsetTop - boxHeight > boxHeight){
+                        if(offsetTop > boxHeight){
                             this.navScrollTo(offsetTop - boxHeight)
+                        }else {
+                            this.navScrollTo(0)
                         }
                     })
                 })
@@ -70,14 +90,6 @@
             navScrollTo(y) {
                 this.$refs.scrollWrapper.scrollTo(0, y)
             }
-        },
-        mounted() {
-            this.$nextTick(() => {
-                const scrollActived = document.querySelector('li.actived')
-                if(scrollActived){
-                    console.log(scrollActived.offsetTop)
-                }
-            })
         }
     }
 </script>

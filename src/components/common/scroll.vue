@@ -1,5 +1,5 @@
 <template>
-    <div class="scroll-wrapper" :class="{'no-scroll': isNoScroll}" @scroll.passive="handleScroll" ref="scrollWrapper">
+    <div class="scroll-wrapper" :class="{'no-scroll': isNoScroll}" ref="scrollWrapper">
         <slot></slot>
     </div>
 </template>
@@ -21,17 +21,12 @@
             }
         },
         methods: {
-            handleScroll(e) {
-                const offsetY = e.target.scrollTop || window.pageYOffset || document.body.scrollTop
-                this.$emit('onScroll', offsetY)
-            },
             scrollTo(x, y) {
                 this.$refs.scrollWrapper.scrollTo(x, y)
             },
             refresh() {
                 if(this.$refs.scrollWrapper) {
                     this.$refs.scrollWrapper.style.height = window.innerHeight - this.top - this.bottom + 'px'
-                    this.$refs.scrollWrapper.addEventListener('scroll', this.handleScroll)
                 }
             }
         },
