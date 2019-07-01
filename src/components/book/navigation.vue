@@ -26,7 +26,8 @@
                         :class="{'actived': index === section}"
                         v-for="(item, index) in navigation"
                         @click.stop="navigateTo($event, item.href)"
-                        v-navigationItemLoad="index">
+                        ref="navItem"
+                        :data-key="index">
                         {{`[ ${index} ]&nbsp;&nbsp;${item.label}`}}
                     </li>
                 </ul>
@@ -50,24 +51,6 @@
         components: {
             Scroll
         },
-        directives: {
-            navigationItemLoad: {
-                inserted: function(el, binding, vnode) {
-                    const selected = el
-                    let boxHeight = (window.innerHeight - 215) / 2,
-                        offsetTop = null
-
-                    if(selected) {
-                        if(selected.className === "navigation-item actived") {
-                            offsetTop = binding.value * 35
-                            if(offsetTop - boxHeight > boxHeight){
-                                vnode.context.navScrollTo(offsetTop - boxHeight)
-                            }
-                        }
-                    }
-                }
-            }
-        },
         methods: {
             navigateTo(e, href) {
                 let boxHeight = (window.innerHeight - 215) / 2,
@@ -90,6 +73,27 @@
             navScrollTo(y) {
                 this.$refs.scrollWrapper.scrollTo(0, y)
             }
+        },
+        updated() {
+            setTimeout(() => {
+                let navItem = this.$refs.navItem,
+                    boxHeight = (window.innerHeight - 215) / 2,
+                    offsetTop = null
+
+                if(navItem) {
+                    navItem.forEach((item, index) => {
+                        if(item.className === 'navigation-item actived') {
+                            offsetTop = index * 35
+
+                            if(offsetTop > boxHeight){
+                                this.navScrollTo(offsetTop - boxHeight)
+                            }else {
+                                this.navScrollTo(0)
+                            }
+                        }
+                    })
+                }
+            }, 2500)
         }
     }
 </script>
