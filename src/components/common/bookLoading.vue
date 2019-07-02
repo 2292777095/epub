@@ -1,5 +1,5 @@
 <template>
-    <div class="bookLoading-wrapper" v-show="bookLoading === true">
+    <div class="bookLoading-wrapper">
         <div class="loading-wrapper">
             <div class="box">
                 <div class="loading-wrapper-item-box">

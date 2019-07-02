@@ -10,6 +10,7 @@
                         <span :class="{'actived': currentTab === 1}" @click="switchCurrentTab(1)">目录</span>
                         <span :class="{'actived': currentTab === 2}" @click="switchCurrentTab(2)">书签</span>
                     </div>
+                    <book-loading v-if="hideLoading"></book-loading>
                 </div>
             </transition>
         </div>
@@ -20,20 +21,32 @@
     import {bookMixin} from "../../utils/mixin"
     import slideContents from './contents'
     import slideNavigation from './navigation'
+    import bookLoading from '@/components/common/bookLoading'
 
     export default {
         mixins: [bookMixin],
+        components: {
+            bookLoading
+        },
         data() {
             return {
                 currentTab: 1,
                 slideContents,
-                slideNavigation
+                slideNavigation,
+                hideLoading: true
             }
         },
         methods: {
             switchCurrentTab(index) {
                 this.currentTab = index
             }
+        },
+        mounted() {
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    this.hideLoading = false
+                }, 4000)
+            })
         }
     }
 </script>
@@ -48,6 +61,7 @@
         z-index: 9999
         background: rgba(0, 0, 0, .65)
         .content-wrapper
+            position: relative
             display: flex
             flex-direction: column
             width: 80%

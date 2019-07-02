@@ -16,25 +16,25 @@
                 </div>
             </div>
         </div>
-        <div class="navigation-wrapper">
-            <div class="navigation-list-wrapper"
-                 :style="{'height': boxHeight + 'px'}"
-                 ref="scrollWrapper">
-                <ul class="navigation-box" :style="calcHeight">
-                    <li class="navigation-item"
-                        :class="{'actived': index === section}"
-                        v-for="(item, index) in navigation"
-                        @click.stop="navigateTo(index, item.href)">
-                        {{`[ ${index} ]&nbsp;&nbsp;${item.label}`}}
-                    </li>
-                </ul>
-            </div>
+        <div class="navigation-list-wrapper"
+             :style="{'height': boxHeight + 'px'}"
+             ref="scrollWrapper"
+             @load="">
+            <ul class="navigation-box" :style="calcHeight">
+                <li class="navigation-item"
+                    :class="{'actived': index === section}"
+                    v-for="(item, index) in navigation"
+                    :data-key="index"
+                    @click.stop="navigateTo(index, item.href)">
+                    {{`[ ${index} ]&nbsp;&nbsp;${item.label}`}}
+                </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <script>
-    import {bookMixin} from "../../utils/mixin";
+    import {bookMixin} from "../../utils/mixin"
 
     export default {
         mixins: [bookMixin],
@@ -70,9 +70,12 @@
         },
         watch: {
             navigation: function(newVal) {
-                this.$nextTick(() => {
-                    this.$refs.scrollWrapper.scrollTo(0, 800)
-                })
+                setTimeout(() => {
+                    let selected = document.querySelector('li.actived')
+                    let line = this.boxHeight / 2,
+                        offsetTop = selected.dataset.key * 35 - line
+                    this.$refs.scrollWrapper.scrollTo(0, offsetTop)
+                }, 3000)
             }
         }
     }
@@ -129,30 +132,29 @@
                     p
                         color: #666
                         font-size: 12px
-        .navigation-wrapper
+        .navigation-list-wrapper
+            position: relative
+            z-index: 100
+            width: 100%
+            overflow-x: hidden
+            overflow-y: scroll
             box-sizing: border-box
             padding: 0 20px
-            .navigation-list-wrapper
-                position: relative
-                z-index: 100
+            -webkit-overflow-scrolling: touch
+            &::-webkit-scrollbar
+                display: none;
+            &.no-scroll
+                overflow: hidden
+            .navigation-item
+                display: block
                 width: 100%
-                overflow-x: hidden
-                overflow-y: scroll
-                -webkit-overflow-scrolling: touch
-                &::-webkit-scrollbar
-                    display: none;
-                &.no-scroll
-                    overflow: hidden
-                .navigation-item
-                    display: block
-                    width: 100%
-                    color: #333
-                    font-size: 14px
-                    line-height: 35px
-                    overflow: hidden
-                    white-space: nowrap
-                    -ms-text-overflow: ellipsis
-                    text-overflow: ellipsis
-                    &.actived
-                        color: #4d96f2
+                color: #333
+                font-size: 14px
+                line-height: 35px
+                overflow: hidden
+                white-space: nowrap
+                -ms-text-overflow: ellipsis
+                text-overflow: ellipsis
+                &.actived
+                    color: #4d96f2
 </style>
