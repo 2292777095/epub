@@ -9,7 +9,8 @@ const bookStore = {
         cover: "",
         metadata: null,
         navigation: null,
-        section: null
+        section: null,
+        distance: 0
     },
     mutations: {
         'setToggle': (state, toggle) => state.toggle = toggle,
@@ -22,6 +23,7 @@ const bookStore = {
         'setMetadata': (state, metadata) => state.metadata = metadata,
         'setNavigation': (state, navigation) => state.navigation = navigation,
         'setSection': (state, section) => state.section = section,
+        'setDistance': (state, distance) => state.distance = distance,
     }
 };
 

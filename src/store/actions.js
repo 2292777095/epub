@@ -9,6 +9,7 @@ const actions = {
     setMetadata: ({commit}, metadata) => commit('setMetadata', metadata),
     setNavigation: ({commit}, navigation) => commit('setNavigation', navigation),
     setSection: ({commit}, section) => commit('setSection', section),
+    setDistance: ({commit}, distance) => commit('setDistance', distance),
 }
 
 export default  actions

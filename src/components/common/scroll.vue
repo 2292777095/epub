@@ -1,11 +1,18 @@
 <template>
-    <div class="scroll-wrapper" :class="{'no-scroll': isNoScroll}" ref="scrollWrapper">
+    <div class="scroll-wrapper" :style="{'height': boxHeight}" ref="scrollWrapper">
         <slot></slot>
     </div>
 </template>
 
 <script>
+    import BScroll from 'better-scroll'
+
     export default {
+        data() {
+            return {
+                boxHeight: window.innerHeight - 215 + 'px'
+            }
+        },
         props: {
             top: {
                 type: Number,
@@ -15,23 +22,28 @@
                 type: Number,
                 default: 0
             },
-            isNoScroll: {
-                type: Boolean,
-                default: false
-            }
-        },
-        methods: {
-            scrollTo(x, y) {
-                this.$refs.scrollWrapper.scrollTo(x, y)
+            distance: {
+                type: Number,
+                default: 0
             },
-            refresh() {
-                if(this.$refs.scrollWrapper) {
-                    this.$refs.scrollWrapper.style.height = window.innerHeight - this.top - this.bottom + 'px'
-                }
+            calcHeight: {
+                type: Number,
+                default: 0
             }
         },
-        mounted() {
-            this.refresh()
+        watch: {
+            distance(newVal) {
+                console.log(newVal)
+                if(this.Scroll) {
+                    this.Scroll.refresh()
+                }else {
+                    this.Scroll = new BScroll(this.$refs.scrollWrapper, {
+                        click: true
+                    })
+                }
+                this.Scroll.scrollTo(0, -newVal, 100)
+                console.log(this.Scroll)
+            }
         }
     }
 </script>

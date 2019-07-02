@@ -16,84 +16,64 @@
                 </div>
             </div>
         </div>
-        <Scroll
-            :top="154"
-            :bottom="61"
-            ref="scrollWrapper">
-            <div class="navigation-list-wrapper">
-                <ul>
+        <div class="navigation-wrapper">
+            <div class="navigation-list-wrapper"
+                 :style="{'height': boxHeight + 'px'}"
+                 ref="scrollWrapper">
+                <ul class="navigation-box" :style="calcHeight">
                     <li class="navigation-item"
                         :class="{'actived': index === section}"
                         v-for="(item, index) in navigation"
-                        @click.stop="navigateTo($event, item.href)"
-                        ref="navItem"
-                        :data-key="index">
+                        @click.stop="navigateTo(index, item.href)">
                         {{`[ ${index} ]&nbsp;&nbsp;${item.label}`}}
                     </li>
                 </ul>
             </div>
-        </Scroll>
+        </div>
     </div>
 </template>
 
 <script>
     import {bookMixin} from "../../utils/mixin";
-    import Scroll from '../common/scroll'
 
     export default {
         mixins: [bookMixin],
         data() {
             return {
                 closeShow: false,
-                searchText: ''
+                searchText: '',
+                boxHeight: window.innerHeight - 215
             }
         },
-        components: {
-            Scroll
+        computed: {
+            calcHeight() {
+                if(this.navigation){
+                    return {'height': this.navigation.length * 35 + 'px'}
+                }
+            }
         },
         methods: {
-            navigateTo(e, href) {
-                let boxHeight = (window.innerHeight - 215) / 2,
-                    offsetTop = e.target.offsetTop
-
+            navigateTo(index, href) {
                 this.setToggle(0).then(() => {
                     this.display(href, () => {
+                        let line = this.boxHeight / 2,
+                            offsetTop = index * 35 - line
+
                         this.refreshLocation()
-                        if(offsetTop > boxHeight){
-                            this.navScrollTo(offsetTop - boxHeight)
-                        }else {
-                            this.navScrollTo(0)
-                        }
+                        this.$refs.scrollWrapper.scrollTo(0, offsetTop > line ? offsetTop : 0)
                     })
                 })
             },
             doSearch(e) {
                 this.searchText = e.target.value
             },
-            navScrollTo(y) {
-                this.$refs.scrollWrapper.scrollTo(0, y)
-            }
         },
-        updated() {
-            setTimeout(() => {
-                let navItem = this.$refs.navItem,
-                    boxHeight = (window.innerHeight - 215) / 2,
-                    offsetTop = null
-
-                if(navItem) {
-                    navItem.forEach((item, index) => {
-                        if(item.className === 'navigation-item actived') {
-                            offsetTop = index * 35
-
-                            if(offsetTop > boxHeight){
-                                this.navScrollTo(offsetTop - boxHeight)
-                            }else {
-                                this.navScrollTo(0)
-                            }
-                        }
-                    })
-                }
-            }, 2500)
+        watch: {
+            navigation: function(newVal) {
+                this.$nextTick(() => {
+                    this.$refs.scrollWrapper.scrollTo(0, 800)
+                })
+            }
         }
     }
 </script>
@@ -149,20 +129,30 @@
                     p
                         color: #666
                         font-size: 12px
-        .navigation-list-wrapper
-            flex: 1
+        .navigation-wrapper
             box-sizing: border-box
             padding: 0 20px
-            .navigation-item
-                display: block
+            .navigation-list-wrapper
+                position: relative
+                z-index: 100
                 width: 100%
-                color: #333
-                font-size: 14px
-                line-height: 35px
-                overflow: hidden
-                white-space: nowrap
-                -ms-text-overflow: ellipsis
-                text-overflow: ellipsis
-                &.actived
-                    color: #4d96f2
+                overflow-x: hidden
+                overflow-y: scroll
+                -webkit-overflow-scrolling: touch
+                &::-webkit-scrollbar
+                    display: none;
+                &.no-scroll
+                    overflow: hidden
+                .navigation-item
+                    display: block
+                    width: 100%
+                    color: #333
+                    font-size: 14px
+                    line-height: 35px
+                    overflow: hidden
+                    white-space: nowrap
+                    -ms-text-overflow: ellipsis
+                    text-overflow: ellipsis
+                    &.actived
+                        color: #4d96f2
 </style>

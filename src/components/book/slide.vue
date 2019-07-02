@@ -27,7 +27,7 @@
             return {
                 currentTab: 1,
                 slideContents,
-                slideNavigation,
+                slideNavigation
             }
         },
         methods: {

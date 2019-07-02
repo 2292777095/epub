@@ -14,6 +14,7 @@ export const bookMixin = {
             'metadata',
             'navigation',
             'section',
+            'distance',
         ])
     },
     methods: {
@@ -28,6 +29,7 @@ export const bookMixin = {
             'setMetadata',
             'setNavigation',
             'setSection',
+            'setDistance',
         ]),
         refreshLocation() {
             const currentLocation = this.currentBook.rendition.currentLocation()
