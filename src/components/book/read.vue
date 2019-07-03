@@ -27,6 +27,7 @@
                 if(this.rendition){
                     this.rendition.prev().then(() => {
                         this.refreshLocation()
+                        this.scrollTo()
                     })
                     this.setToggle(0)
                 }
@@ -38,6 +39,7 @@
                 if(this.rendition){
                     this.rendition.next().then(() => {
                         this.refreshLocation()
+                        this.scrollTo()
                     })
                     this.setToggle(0)
                 }

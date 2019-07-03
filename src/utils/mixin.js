@@ -31,6 +31,14 @@ export const bookMixin = {
             'setSection',
             'setDistance',
         ]),
+        scrollTo() {
+            let selected = document.querySelector('li.actived'),
+                box = document.querySelector('.navigation-list-wrapper'),
+                line = (window.innerHeight - 215) / 2,
+                offsetTop = selected.dataset.key * 35 - line
+
+            box.scrollTo(0, offsetTop)
+        },
         refreshLocation() {
             const currentLocation = this.currentBook.rendition.currentLocation()
             if(currentLocation && currentLocation.start){

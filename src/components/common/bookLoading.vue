@@ -40,7 +40,7 @@
         top: 0
         width: 100%
         height: 100%
-        background: #FFF
+        background: #f7f7ef
         .loading-wrapper
             position: absolute
             left: 50%

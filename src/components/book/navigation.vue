@@ -3,8 +3,13 @@
         <div class="book-search-wrapper">
             <div class="book-search-box">
                 <i class="icon-search"></i>
-                <input @change="doSearch" type="text" placeholder="请输入搜索关键字" :value="searchText">
-                <i v-show="closeShow" class="icon-close"></i>
+                <input placeholder="请输入搜索关键字"
+                       type="text"
+                       v-model="searchText"
+                       @focus="showSearchContent(true)"
+                       @click="showCancel = true"
+                       @keyup.enter="search">
+                <span class="cancel" v-show="showCancel" @click="cancel">取消</span>
             </div>
         </div>
         <div class="book-info-wrapper">
@@ -16,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <div class="navigation-list-wrapper"
+        <div v-show="!searchContentToggle" class="navigation-list-wrapper"
              :style="{'height': boxHeight + 'px'}"
              ref="scrollWrapper"
              @load="">
@@ -30,19 +35,43 @@
                 </li>
             </ul>
         </div>
+        <div class="searchContent"
+             v-show="searchContentToggle"
+             :style="{'height': boxHeight + 'px'}">
+            <book-loading v-show="showLoading"></book-loading>
+            <ul>
+                <li class="item"
+                    v-for="(searchItem, index) in searchList"
+                    :key="index"
+                    v-html="searchItem.excerpt"
+                    @click="displayContent(searchItem.cfi)"></li>
+            </ul>
+            <div class="noData" v-show="showNoData">
+                <img src="../../../public/image/notData.png" alt="">
+                <p>暂未搜索到相关信息</p>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     import {bookMixin} from "../../utils/mixin"
+    import bookLoading from "@/components/common/bookLoading"
 
     export default {
         mixins: [bookMixin],
+        components: {
+            bookLoading
+        },
         data() {
             return {
-                closeShow: false,
+                boxHeight: window.innerHeight - 215,
+                searchContentToggle: false,
+                showLoading: false,
                 searchText: '',
-                boxHeight: window.innerHeight - 215
+                searchList: null,
+                showCancel: false,
+                showNoData: false
             }
         },
         computed: {
@@ -53,28 +82,74 @@
             }
         },
         methods: {
+            // 目录跳转
             navigateTo(index, href) {
                 this.setToggle(0).then(() => {
                     this.display(href, () => {
-                        let line = this.boxHeight / 2,
-                            offsetTop = index * 35 - line
-
-                        this.refreshLocation()
-                        this.$refs.scrollWrapper.scrollTo(0, offsetTop > line ? offsetTop : 0)
+                        this.scrollTo()
                     })
                 })
             },
-            doSearch(e) {
-                this.searchText = e.target.value
+            // 搜索
+            search(e) {
+                const self = this
+                let text = e.target.value
+                if(text && text.length > 0){
+                    this.searchList = null
+                    self.showLoading = true
+                    this.doSearch(text).then(result => {
+                        self.showLoading = false
+                        if(result.length > 0){
+                            self.showNoData = self.showNoData && false
+                            self.searchList = result
+                            self.searchList.map(item => {
+                                item.excerpt = item.excerpt.replace(text, `<span style="color: #aa6c1f;">${text}</span>`)
+                                return item
+                            })
+                        }else {
+                            self.showNoData = true
+                        }
+                    })
+                }
+            },
+            // 搜索内容处理
+            doSearch(text) {
+                return Promise.all(
+                    this.currentBook.spine.spineItems.map(
+                        section => section.load(this.currentBook.load.bind(this.currentBook))
+                        .then(section.find.bind(section, text))
+                        .finally(section.unload.bind(section))
+                    )
+                ).then(result => Promise.resolve([].concat.apply([], result)))
+            },
+            // 显示搜索结果模块
+            showSearchContent(flag) {
+                this.searchContentToggle = flag
+                this.scrollTo()
+            },
+            // 取消搜索，还原状态
+            cancel() {
+                this.showCancel = false
+                this.searchContentToggle = false
+                this.searchText = ''
+                this.searchList = null
+                self.showNoData = false
+            },
+            // 搜索内容跳转
+            displayContent(target, highlight = false) {
+                this.display(target, () => {
+                    this.setToggle(0)
+                    this.cancel()
+                    if (highlight) {
+                        this.currentBook.rendition.annotations.highlight(target)
+                    }
+                })
             },
         },
         watch: {
-            navigation: function(newVal) {
+            navigation: function() {
                 setTimeout(() => {
-                    let selected = document.querySelector('li.actived')
-                    let line = this.boxHeight / 2,
-                        offsetTop = selected.dataset.key * 35 - line
-                    this.$refs.scrollWrapper.scrollTo(0, offsetTop)
+                    this.scrollTo()
                 }, 3000)
             }
         }
@@ -89,28 +164,33 @@
         .book-search-wrapper
             padding: 15px 15px 0
             .book-search-box
+                position: relative
                 display: flex
                 justify-content: left
                 align-items: center
-                border: 1px solid #EEE
-                padding: 2px 15px
                 i
+                    position: absolute
+                    top: 50%
+                    left: 15px
                     color: #BBB
                     font-size: 14px
-                    &.icon-close
-                        margin-left: 8px
+                    margin-top: -7px
                 input
+                    border: 1px solid #EEE
+                    padding: 2px 15px 2px 35px
                     flex: 1
-                    border: none
                     background: none
                     height: 25px
-                    margin-left: 8px
                     font-size: 14px
                     color: #666
+                    margin-right: 10px
                     &:focus
                         outline: none
                     &::placeholder
                         color: #999
+                .cancel
+                    color: #aa6c1f
+                    font-size: 14px
         .book-info-wrapper
             flex: 0 0 105px
             box-sizing: border-box
@@ -157,4 +237,41 @@
                 text-overflow: ellipsis
                 &.actived
                     color: #4d96f2
+        .searchContent
+            position: relative
+            z-index: 100
+            width: 100%
+            overflow-x: hidden
+            overflow-y: scroll
+            box-sizing: border-box
+            padding: 0 20px
+            -webkit-overflow-scrolling: touch
+            background: #f7f7ef
+            display: flex
+            flex-direction: column
+            &::-webkit-scrollbar
+                display: none;
+            &.no-scroll
+                overflow: hidden
+            .item
+                font-size: 14px
+                color: #666
+                display: -webkit-box
+                overflow: hidden
+                -webkit-box-orient: vertical
+                -webkit-line-clamp: 3
+                line-height: 20px
+                margin: 15px 0
+                box-sizing: border-box
+            .noData
+                padding-top: 30px
+                img
+                    display: block
+                    width: 150px
+                    height: 150px
+                    margin: 0 auto 10px
+                p
+                    font-size: 14px
+                    color: #888
+                    text-align: center
 </style>
