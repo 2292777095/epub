@@ -83,7 +83,7 @@
         },
         methods: {
             // 目录跳转
-            navigateTo(index, href) {
+            navigateTo(href) {
                 this.setToggle(0).then(() => {
                     this.display(href, () => {
                         this.scrollTo()

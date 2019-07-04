@@ -4,7 +4,7 @@
             <transition name="moveLeft">
                 <div class="content-wrapper" v-show="toggle == 2" @click.stop="">
                     <div class="content">
-                        <component :is="currentTab === 1 ? slideNavigation : slideContents"></component>
+                        <component @switchCurrentTab="switchCurrentTab" :is="currentTab === 1 ? slideNavigation : slideMark"></component>
                     </div>
                     <div class="content-page-wrapper">
                         <span :class="{'actived': currentTab === 1}" @click="switchCurrentTab(1)">目录</span>
@@ -19,7 +19,7 @@
 
 <script>
     import {bookMixin} from "../../utils/mixin"
-    import slideContents from './contents'
+    import slideMark from './mark'
     import slideNavigation from './navigation'
     import bookLoading from '@/components/common/bookLoading'
 
@@ -31,7 +31,7 @@
         data() {
             return {
                 currentTab: 1,
-                slideContents,
+                slideMark,
                 slideNavigation,
                 hideLoading: true
             }
@@ -43,10 +43,20 @@
         },
         mounted() {
             this.$nextTick(() => {
-                setTimeout(() => {
+                const timeout = setTimeout(() => {
                     this.hideLoading = false
+                    clearTimeout(timeout)
                 }, 4000)
             })
+        },
+        watch: {
+            currentTab: function (newVal) {
+                if(newVal === 1) {
+                    this.$nextTick(() => {
+                        this.scrollTo()
+                    })
+                }
+            }
         }
     }
 </script>

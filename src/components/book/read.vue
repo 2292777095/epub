@@ -4,6 +4,7 @@
             <div class="prev" @click="prev"></div>
             <div class="setting" @click="hide"></div>
             <div class="next" @click="next"></div>
+            <i class="icon-bookMark" v-if="showIconMark"></i>
         </div>
         <div class="read-wrapper">
             <div id="read"></div>
@@ -112,9 +113,16 @@
             right: 0
             bottom: 0
             z-index: 99
+            overflow: hidden
             &>div
                 flex: 1
                 height: 100%
                 &:nth-of-type(2)
                     flex: 2
+        .icon-bookMark
+            position: absolute
+            top: 0
+            right: -6px
+            font-size: 30px
+            color: #e8554d
 </style>

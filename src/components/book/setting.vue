@@ -25,7 +25,7 @@
                     <i class="icon-catalog"></i>
                     <span>查看目录</span>
                 </li>
-                <li class="item">
+                <li class="item" @click="addMark">
                     <i class="icon-add-bookMark"></i>
                     <span>添加书签</span>
                 </li>
@@ -51,11 +51,42 @@
         data() {
             return {
                 themeList,
-                fontSizeList
+                fontSizeList,
+                showTips: false
             }
         },
         mixins: [bookMixin],
         methods: {
+            // 添加书签
+            addMark() {
+                this.bookMark = bookLocalStorage.getBookInfoMark(this.bookName)
+                if(!this.bookMark) {
+                    this.bookMark = []
+                }
+                // 获取当前所处的内容位置
+                const currentLocation = this.currentBook.rendition.currentLocation()
+                let cfiBase = currentLocation.start.cfi.replace(/!.*/, '')
+                let cfiStart = currentLocation.start.cfi.replace(/.*!/, '').replace(/\)$/, '')
+                let cfiEnd = currentLocation.end.cfi.replace(/.*!/, '').replace(/\)$/, '')
+                let cfiRange = `${cfiBase}!,${cfiStart},${cfiEnd})`
+                // 设置书签
+                this.currentBook.getRange(cfiRange).then(range => {
+                    let text = range.toString().replace(/\s\s/g, '')
+                    this.bookMark.push({
+                        cfi: currentLocation.start.cfi,
+                        text
+                    })
+                    // 加入缓存
+                    bookLocalStorage.setBookInfoMark(this.bookName, this.bookMark)
+                }).then(() => {
+                    clearTimeout(timeout)
+                    this.showTips = true
+                    const timeout = setTimeout(() => {
+                        this.showTips = false
+                        clearTimeout(timeout)
+                    }, 500)
+                })
+            },
             changeTheme(theme) {
                 this.setTheme(theme.name).then(() => {
                     this.currentBook.rendition.themes.select(this.theme)

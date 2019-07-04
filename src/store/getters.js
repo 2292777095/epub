@@ -10,6 +10,7 @@ const bookStore = {
     navigation: state => state.bookStore.navigation,
     section: state => state.bookStore.section,
     distance: state => state.bookStore.distance,
+    showIconMark: state => state.bookStore.showIconMark,
 }
 
 export default  bookStore

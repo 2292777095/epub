@@ -15,6 +15,7 @@ export const bookMixin = {
             'navigation',
             'section',
             'distance',
+            'showIconMark'
         ])
     },
     methods: {
@@ -30,13 +31,15 @@ export const bookMixin = {
             'setNavigation',
             'setSection',
             'setDistance',
+            'setShowIconMark'
         ]),
         scrollTo() {
-            let selected = document.querySelector('li.actived'),
+            let currentLocationIndex = this.currentBook.rendition.currentLocation().start.index,
                 box = document.querySelector('.navigation-list-wrapper'),
                 line = (window.innerHeight - 215) / 2,
-                offsetTop = selected.dataset.key * 35 - line
+                offsetTop = currentLocationIndex * 35 - line
 
+            this.setSection(currentLocationIndex)
             box.scrollTo(0, offsetTop)
         },
         refreshLocation() {

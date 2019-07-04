@@ -40,5 +40,11 @@ export const bookLocalStorage = {
     },
     getBookInfoStartCfi(bookName) {
         return this.getBookInfo(bookName, 'startCfi')
-    }
+    },
+    setBookInfoMark(bookName, cfiRange) {
+        this.setBookInfo(bookName, 'cfiRange', cfiRange)
+    },
+    getBookInfoMark(bookName) {
+        return this.getBookInfo(bookName, 'cfiRange')
+    },
 }
