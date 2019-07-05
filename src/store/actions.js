@@ -10,7 +10,6 @@ const actions = {
     setNavigation: ({commit}, navigation) => commit('setNavigation', navigation),
     setSection: ({commit}, section) => commit('setSection', section),
     setDistance: ({commit}, distance) => commit('setDistance', distance),
-    setShowIconMark: ({commit}, showIconMark) => commit('setShowIconMark', showIconMark),
 }
 
 export default  actions

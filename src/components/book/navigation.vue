@@ -133,7 +133,7 @@
                 this.searchContentToggle = false
                 this.searchText = ''
                 this.searchList = null
-                self.showNoData = false
+                this.showNoData = false
             },
             // 搜索内容跳转
             displayContent(target, highlight = false) {

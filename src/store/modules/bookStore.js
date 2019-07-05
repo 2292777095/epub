@@ -11,7 +11,6 @@ const bookStore = {
         navigation: null,
         section: null,
         distance: 0,
-        showIconMark: true
     },
     mutations: {
         'setToggle': (state, toggle) => state.toggle = toggle,
@@ -25,7 +24,6 @@ const bookStore = {
         'setNavigation': (state, navigation) => state.navigation = navigation,
         'setSection': (state, section) => state.section = section,
         'setDistance': (state, distance) => state.distance = distance,
-        'setShowIconMark': (state, showIconMark) => state.showIconMark = showIconMark,
     }
 };
 

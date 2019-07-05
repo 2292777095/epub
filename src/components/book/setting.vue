@@ -51,8 +51,7 @@
         data() {
             return {
                 themeList,
-                fontSizeList,
-                showTips: false
+                fontSizeList
             }
         },
         mixins: [bookMixin],
@@ -71,20 +70,19 @@
                 let cfiRange = `${cfiBase}!,${cfiStart},${cfiEnd})`
                 // 设置书签
                 this.currentBook.getRange(cfiRange).then(range => {
-                    let text = range.toString().replace(/\s\s/g, '')
-                    this.bookMark.push({
-                        cfi: currentLocation.start.cfi,
-                        text
-                    })
-                    // 加入缓存
-                    bookLocalStorage.setBookInfoMark(this.bookName, this.bookMark)
-                }).then(() => {
-                    clearTimeout(timeout)
-                    this.showTips = true
-                    const timeout = setTimeout(() => {
-                        this.showTips = false
-                        clearTimeout(timeout)
-                    }, 500)
+                    let isExistence = this.bookMark.find(item => item.cfi === currentLocation.start.cfi)
+                    if(!isExistence) {
+                        let text = range.toString().replace(/\s\s/g, '')
+                        this.bookMark.push({
+                            cfi: currentLocation.start.cfi,
+                            text
+                        })
+                        // 加入缓存
+                        bookLocalStorage.setBookInfoMark(this.bookName, this.bookMark)
+                        this.$emit('showMarkTips', '书签添加成功', 'icon-check')
+                    }else {
+                        this.$emit('showMarkTips', '书签已存在', 'icon-close')
+                    }
                 })
             },
             changeTheme(theme) {

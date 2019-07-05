@@ -1,10 +1,10 @@
 <template>
     <transition name="fade">
-        <div class="slider-wrapper" v-show="toggle == 2" @click="setToggle(0)">
+        <div class="slider-wrapper" v-show="toggle == 2" @click="hideSlider">
             <transition name="moveLeft">
                 <div class="content-wrapper" v-show="toggle == 2" @click.stop="">
                     <div class="content">
-                        <component @switchCurrentTab="switchCurrentTab" :is="currentTab === 1 ? slideNavigation : slideMark"></component>
+                        <component ref="slider" @switchCurrentTab="switchCurrentTab" :is="currentTab === 1 ? slideNavigation : slideMark"></component>
                     </div>
                     <div class="content-page-wrapper">
                         <span :class="{'actived': currentTab === 1}" @click="switchCurrentTab(1)">目录</span>
@@ -39,6 +39,11 @@
         methods: {
             switchCurrentTab(index) {
                 this.currentTab = index
+            },
+            hideSlider() {
+                this.setToggle(0).then(() => {
+                    this.currentTab = 1
+                })
             }
         },
         mounted() {

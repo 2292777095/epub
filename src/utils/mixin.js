@@ -15,7 +15,6 @@ export const bookMixin = {
             'navigation',
             'section',
             'distance',
-            'showIconMark'
         ])
     },
     methods: {
@@ -31,7 +30,6 @@ export const bookMixin = {
             'setNavigation',
             'setSection',
             'setDistance',
-            'setShowIconMark'
         ]),
         scrollTo() {
             let currentLocationIndex = this.currentBook.rendition.currentLocation().start.index,
