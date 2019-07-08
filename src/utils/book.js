@@ -3,8 +3,9 @@ export const themeList = [
         name: 'default',
         style: {
             body: {
-                color: '#333',
-                background: '#f7f7ef'
+                'color': '#333',
+                'background': '#f7f7ef',
+                'padding-top': '30px !important',
             }
         }
     },
@@ -13,7 +14,8 @@ export const themeList = [
         style: {
             body: {
                 'color': '#333',
-                'background': '#efdfbd'
+                'background': '#efdfbd',
+                'padding-top': '30px !important',
             }
         }
     },
@@ -22,7 +24,8 @@ export const themeList = [
         style: {
             body: {
                 'color': '#333',
-                'background': '#beccbd'
+                'background': '#beccbd',
+                'padding-top': '30px !important',
             }
         }
     },
@@ -31,7 +34,8 @@ export const themeList = [
         style: {
             body: {
                 'color': '#333',
-                'background': '#e6cece'
+                'background': '#e6cece',
+                'padding-top': '30px !important',
             }
         }
     },
@@ -40,7 +44,8 @@ export const themeList = [
         style: {
             body: {
                 'color': '#999',
-                'background': '#292421'
+                'background': '#292421',
+                'padding-top': '30px !important',
             }
         }
     }

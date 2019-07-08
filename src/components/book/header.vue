@@ -1,7 +1,7 @@
 <template>
     <transition name="moveUp">
-        <div class="header-wrapper" v-show="bookLoading == true">
-            <p class="chapter-title">header</p>
+        <div class="header-wrapper" v-show="bookLoading == false">
+            <p class="chapter-title">{{getSectionName}}</p>
         </div>
     </transition>
 </template>
@@ -10,7 +10,14 @@
     import {bookMixin} from "../../utils/mixin"
 
     export default {
-        mixins: [bookMixin]
+        mixins: [bookMixin],
+        computed: {
+            getSectionName() {
+                if(this.navigation && this.section){
+                    return this.section ? this.navigation[this.section].label : ''
+                }
+            }
+        }
     }
 </script>
 
@@ -20,12 +27,17 @@
         left: 0
         top: 0
         width: 100%
-        z-index: 999
-        background: #f7f7ef
+        z-index: 99
+        background: none
         padding: 0 15px
         box-sizing: border-box
         .chapter-title
-            color: #333
+            font-weight: bold
+            color: #AA6C1F
             font-size: 12px
-            line-height: 22px
+            line-height: 30px
+            overflow: hidden
+            white-space: nowrap
+            -ms-text-overflow: ellipsis
+            text-overflow: ellipsis
 </style>

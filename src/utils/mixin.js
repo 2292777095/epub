@@ -14,7 +14,6 @@ export const bookMixin = {
             'metadata',
             'navigation',
             'section',
-            'distance',
         ])
     },
     methods: {
@@ -29,7 +28,6 @@ export const bookMixin = {
             'setMetadata',
             'setNavigation',
             'setSection',
-            'setDistance',
         ]),
         scrollTo() {
             let currentLocationIndex = this.currentBook.rendition.currentLocation().start.index,
