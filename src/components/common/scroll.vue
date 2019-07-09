@@ -1,12 +1,47 @@
 <template>
-    <div class="scroll-wrapper"></div>
+    <div class="scroll-wrapper" :class="{'no-scroll': ifNoScroll}" @scroll.passive="handleScroll" ref="scrollWrapper">
+        <slot></slot>
+    </div>
 </template>
 
 <script>
-    export default {}
+    export default {
+        props: {
+            top: {
+                type: Number,
+                default: 0
+            },
+            bottom: {
+                type: Number,
+                default: 0
+            },
+            ifNoScroll: {
+                type: Boolean,
+                default: false
+            }
+        },
+        methods: {
+            handleScroll(e) {
+                const offsetY = e.target.scrollTop || window.pageYOffset || document.body.scrollTop
+                this.$emit('onScroll', offsetY)
+            },
+            scrollTo(x, y) {
+                this.$refs.scrollWrapper.scrollTo(x, y)
+            },
+            refresh() {
+                if (this.$refs.scrollWrapper) {
+                    this.$refs.scrollWrapper.style.height = window.innerHeight - this.top - this.bottom + 'px'
+                    this.$refs.scrollWrapper.addEventListener('scroll', this.handleScroll)
+                }
+            }
+        },
+        mounted() {
+            this.refresh()
+        }
+    }
 </script>
 
-<style scoped lang="stylus" rel="stylesheet">
+<style lang="stylus" rel="stylesheet" scoped>
     .scroll-wrapper
         position: relative
         z-index: 100
@@ -15,7 +50,7 @@
         overflow-y: scroll
         -webkit-overflow-scrolling: touch
         &::-webkit-scrollbar
-             display: none;
+            display: none
         &.no-scroll
-             overflow: hidden
+            overflow: hidden
 </style>

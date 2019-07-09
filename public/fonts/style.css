@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('icomoon.eot?ecu1iq');
-  src:  url('icomoon.eot?ecu1iq#iefix') format('embedded-opentype'),
-  url('icomoon.ttf?ecu1iq') format('truetype'),
-  url('icomoon.woff?ecu1iq') format('woff'),
-  url('icomoon.svg?ecu1iq#icomoon') format('svg');
+  src:  url('icomoon.eot?t137o1');
+  src:  url('icomoon.eot?t137o1#iefix') format('embedded-opentype'),
+  url('icomoon.ttf?t137o1') format('truetype'),
+  url('icomoon.woff?t137o1') format('woff'),
+  url('icomoon.svg?t137o1#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-back:before {
+  content: "\e914";
+}
+.icon-book:before {
+  content: "\e915";
+}
+.icon-shake:before {
+  content: "\e923";
+}
 .icon-logo .path1:before {
   content: "\e90d";
   color: rgb(22, 95, 49);
@@ -47,6 +56,12 @@
   content: "\e911";
   margin-left: -1.375em;
   color: rgb(52, 159, 213);
+}
+.icon-read:before {
+  content: "\e912";
+}
+.icon-user:before {
+  content: "\e913";
 }
 .icon-check:before {
   content: "\e90c";

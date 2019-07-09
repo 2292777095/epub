@@ -12,14 +12,13 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {bookMixin} from "../utils/mixin"
+    import {bookMixin} from "@/utils/mixin"
     import bookHeader from '@/components/book/header'
     import bookView from '@/components/book/read'
     import bookSetting from '@/components/book/setting'
     import bookSlide from '@/components/book/slide'
     import bookLoading from '@/components/common/bookLoading'
     import tips from "@/components/common/tips"
-
 
     export default {
         data() {
