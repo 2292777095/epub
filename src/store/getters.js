@@ -9,7 +9,7 @@ const bookStore = {
     metadata: state => state.bookStore.metadata,
     navigation: state => state.bookStore.navigation,
     section: state => state.bookStore.section,
-    offsetY: state => state.bookStore.offsetY,
+    offsetY: state => state.store.offsetY,
 }
 
 export default  bookStore

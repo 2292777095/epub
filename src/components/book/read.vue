@@ -68,9 +68,6 @@
                 this.book.loaded.metadata.then(metadata => {
                     this.setMetadata(metadata)
                 })
-                this.book.loaded.navigation.then(nav => {
-                    this.setNavigation(nav.toc)
-                })
             },
             initRendition() {
                 this.rendition = this.book.renderTo('read', {

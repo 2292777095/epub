@@ -65,6 +65,7 @@
         },
         data() {
             return {
+                pageCount: null,
                 boxHeight: window.innerHeight - 215,
                 searchContentToggle: false,
                 showLoading: false,
@@ -73,6 +74,14 @@
                 showCancel: false,
                 showNoData: false
             }
+        },
+        mounted() {
+            this.currentBook.loaded.navigation.then(nav => {
+                this.setNavigation(nav.toc).then(() => {
+                    console.log(this.section, this.pageCount)
+                    this.pageCount = this.section + 20
+                })
+            })
         },
         computed: {
             calcHeight() {
@@ -103,6 +112,7 @@
                             self.showNoData = self.showNoData && false
                             self.searchList = result
                             self.searchList.map(item => {
+                                // 搜索文字高亮提示
                                 item.excerpt = item.excerpt.replace(text, `<span style="color: #aa6c1f;">${text}</span>`)
                                 return item
                             })

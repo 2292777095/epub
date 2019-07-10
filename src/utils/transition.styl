@@ -1,7 +1,8 @@
 .moveUp-enter-active, .moveUp-leave-active,
 .moveDown-enter-active, .moveDown-leave-active,
 .fade-enter-active, .fade-leave-active,
-.moveLeft-enter-active, .moveLeft-leave-active
+.moveLeft-enter-active, .moveLeft-leave-active,
+.fadeMove-enter-active, .fadeMove-leave-active
   transition: all .35s
 
 .moveUp-enter-to, .moveUp-leave,
@@ -12,6 +13,10 @@
 .fade-enter-to, .fade-leave
   opacity: 1
 
+.fadeMove-enter-to, .fadeMove-leave
+  opacity: 1
+  transform: translate3d(0, 0, 0)
+
 .moveUp-enter, .moveUp-leave-to
   transform: translate3d(0, -60px, 0)
 
@@ -20,6 +25,10 @@
 
 .fade-enter, .fade-leave-to
   opacity: 0
+
+.fadeMove-enter, .fadeMove-leave-to
+  opacity: 0
+  transform: translate3d(0, 20px, 0)
 
 .moveLeft-enter, .moveLeft-leave-to
   transform: translate3d(-100%, 0, 0)

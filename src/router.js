@@ -9,7 +9,7 @@ export default new Router({
     routes: [
         {
             path: '',
-            redirect: '/library'
+            redirect: '/read'
         },
         {
             path: '/read',
