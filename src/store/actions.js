@@ -10,6 +10,7 @@ const actions = {
     setNavigation: ({commit}, navigation) => commit('setNavigation', navigation),
     setSection: ({commit}, section) => commit('setSection', section),
     setOffsetY: ({commit}, offsetY) => commit('setOffsetY', offsetY),
+    setFlagCardVisibility: ({commit}, flagCardVisibility) => commit('setFlagCardVisibility', flagCardVisibility),
 }
 
 export default  actions

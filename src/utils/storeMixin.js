@@ -3,12 +3,14 @@ import {mapGetters, mapActions} from 'vuex'
 export const storeMixin = {
     computed: {
         ...mapGetters([
-            'offsetY'
+            'offsetY',
+            'flagCardVisibility',
         ])
     },
     methods: {
         ...mapActions([
-            'setOffsetY'
+            'setOffsetY',
+            'setFlagCardVisibility',
         ])
     }
 }

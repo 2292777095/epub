@@ -10,6 +10,7 @@ const bookStore = {
     navigation: state => state.bookStore.navigation,
     section: state => state.bookStore.section,
     offsetY: state => state.store.offsetY,
+    flagCardVisibility: state => state.store.flagCardVisibility,
 }
 
 export default  bookStore
