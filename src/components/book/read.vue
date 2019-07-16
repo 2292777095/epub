@@ -18,7 +18,7 @@
     import Epub from 'epubjs'
 
     global.ePub = Epub;
-    const bookName = "《求魔》_qinkan.net"
+    const bookName = "45151"
 
     export default {
         mixins: [bookMixin],
@@ -89,7 +89,7 @@
             },
         },
         mounted() {
-            this.book = new Epub(`http://localhost:8080/${bookName}.epub`)
+            this.book = new Epub(`http://localhost:8081/${bookName}.epub`)
             this.setBook(this.book)
             this.setBookName(bookName)
             this.initRendition()
