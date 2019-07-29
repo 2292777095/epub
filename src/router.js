@@ -22,10 +22,6 @@ export default new Router({
                 {
                     path: '/library',
                     component: () => import('@/components/library/library')
-                },
-                {
-                    path: '/user',
-                    component: () => import('@/components/library/user')
                 }
             ]
         }

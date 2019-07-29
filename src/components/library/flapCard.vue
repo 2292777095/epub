@@ -1,9 +1,9 @@
 <template>
     <transition name="fade">
         <div class="flap-card-wrapper"
-             @click="setFlagCardVisibility(false)"
+             @click="hideFlagCard"
              v-show="flagCardVisibility">
-            <div class="flap-card-box" @click.stop="">
+            <div class="flap-card-box" @click.stop="" v-show="!runBookCardAnimation">
                 <div class="flag-card-item"
                     v-for="(item, index) in flapCardList"
                      :key="index"
@@ -12,7 +12,13 @@
                     <div class="flag-card-item-right" ref="right" :style="semiCircleStyle(item, 'right')"></div>
                 </div>
             </div>
-            <div class="close-card-wrapper" @click="setFlagCardVisibility(false)">
+            <div class="recommend-book-wrapper" v-show="runBookCardAnimation" @click.stop="">
+                <img class="recommend-book-cover" :src="random ? random.cover : ''" alt="">
+                <h4 class="recommend-book-title ellipsises">{{random ? random.title : ''}}</h4>
+                <p class="recommend-book-author ellipsises">{{random ? random.author : ''}}</p>
+                <div class="read-book-btn">立即阅读</div>
+            </div>
+            <div class="close-card-wrapper" @click="hideFlagCard">
                 <i class="icon-close"></i>
             </div>
         </div>
@@ -25,16 +31,28 @@
 
     export default {
         mixins: [storeMixin],
+        props: {
+            random: {
+                type: Object,
+                default: {}
+            }
+        },
         data() {
             return {
                 flapCardList,
                 front: 0,
                 back: 1,
                 flapCardSpeed: 25,
-                rotateInterval: null
+                rotateInterval: null,
+                runBookCardAnimation: false
             }
         },
         methods: {
+            hideFlagCard() {
+                this.setFlagCardVisibility(false).then(() => {
+                    this.runBookCardAnimation = false
+                })
+            },
             semiCircleStyle(item, dir) {
                 return {
                     backgroundColor: `rgb(${item.r}, ${item.g}, ${item.b})`,
@@ -108,40 +126,54 @@
                 this.prepare()
             },
             resetRotateAmation() {
-                this.setFlagCardVisibility(false).then(() => {
-                    this.front = 0
-                    this.back = 1
-                    this.flapCardList.forEach((item, index) => {
-                        item.zIndex = 100 - index
-                        item._g = item.g
-                        item.rotateDegree = 0
-                        this.rotate(index, 'front')
-                        this.rotate(index, 'back')
-                    })
-                    clearInterval(this.rotateInterval)
+                this.front = 0
+                this.back = 1
+                this.flapCardList.forEach((item, index) => {
+                    item.zIndex = 100 - index
+                    item._g = item.g
+                    item.rotateDegree = 0
+                    this.rotate(index, 'front')
+                    this.rotate(index, 'back')
                 })
+                clearInterval(this.rotateInterval)
             },
-            stopRotateAmation() {
+            stopAnimation() {
+                if (this.task) {
+                    clearInterval(this.task)
+                }
+                if (this.timeout) {
+                    clearTimeout(this.timeout)
+                }
+                if (this.timeout2) {
+                    clearTimeout(this.timeout2)
+                }
                 this.resetRotateAmation()
+            },
+            runAnimation() {
+                this.timeout = setTimeout(() => {
+                    this.startRotateAmation()
+                }, 300)
+                this.timeout2 = setTimeout(() => {
+                    this.stopAnimation()
+                    this.runBookCardAnimation = true
+                }, 2500)
             }
         },
         watch: {
             flagCardVisibility(newVal) {
                 if(newVal) {
-                    this.startRotateAmation()
-                }else {
-                    this.stopRotateAmation()
+                    this.runAnimation()
                 }
             }
-        }
+        },
     }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet">
     .flap-card-wrapper
-        position: absolute
+        position: fixed
         left: 0
-        bottom: 0
+        top: 0
         width: 100%
         height: 100%
         z-index: 99
@@ -181,6 +213,43 @@
                         background-position: left center
                         transform-origin: left
                         border-radius: 0 80px 80px 0
+        .recommend-book-wrapper
+            position: relative;
+            width: 65%;
+            padding-top: 40px
+            max-width: 400px
+            background: #FFF
+            border-radius: 15px
+            .recommend-book-cover
+                display: block
+                width: 90px
+                height: 130px
+                margin: 0 auto
+            .recommend-book-title
+                color: #333
+                font-weight: bold
+                font-size: 18px
+                line-height: 24px
+                padding: 0 20px
+                margin-top: 30px
+                text-align: center
+                ellipsises(2)
+            .recommend-book-author
+                margin-top: 10px
+                padding: 0 20px
+                text-align: center
+                color: #999
+                font-size: 14px
+                line-height: 20px
+            .read-book-btn
+                margin-top: 20px
+                width: 100%
+                border-radius: 0 0 15px 15px
+                padding: 15px 0
+                text-align: center
+                color: white
+                font-size: 14px
+                background: rgb(74, 171, 255)
         .close-card-wrapper
             position: absolute
             left: 50%

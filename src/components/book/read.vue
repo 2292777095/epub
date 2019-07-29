@@ -18,7 +18,7 @@
     import Epub from 'epubjs'
 
     global.ePub = Epub;
-    const bookName = "45151"
+    const bookName = "Biomedicine/2014_Book_Self-ReportedPopulationHealthA"
 
     export default {
         mixins: [bookMixin],

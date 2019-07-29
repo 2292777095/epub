@@ -6,7 +6,7 @@
                 <i class="icon-search"></i>
                 <input class="search" @click="showHotSearch" type="text" placeholder="计算机科学和软件工程">
             </div>
-            <i class="icon-shake" @click="setFlagCardVisibility(true)"></i>
+            <i class="icon-shake" @click="showFlagCardVisibility"></i>
         </div>
         <transition name="fadeMove">
             <div class="scroll-box" v-show="hotSearchVisibility">
@@ -17,6 +17,7 @@
                 </scroll>
             </div>
         </transition>
+        <flap-card :random="random"></flap-card>
     </div>
 </template>
 
@@ -24,6 +25,7 @@
     import {storeMixin} from "../../utils/storeMixin"
     import scroll from "@/components/common/scroll"
     import hotSearch from "@/components/library/hotSearch"
+    import flapCard from "@/components/library/flapCard"
 
     export default {
         mixins: [storeMixin],
@@ -31,6 +33,7 @@
             return {
                 showShadow: false,
                 hotSearchVisibility: false,
+                random: null,
                 top: 54,
                 bottom: 0,
                 hotSearch: {
@@ -136,6 +139,9 @@
                 }
             }
         },
+        components: {
+            flapCard
+        },
         methods: {
             onScroll(offsetY) {
                 this.setOffsetY(offsetY)
@@ -149,11 +155,23 @@
             hideHotSearch() {
                 this.hotSearchVisibility = false
                 this.showShadow = false
+            },
+            showFlagCardVisibility() {
+                this.setFlagCardVisibility(true)
+                this.axios.get(`/book/home`).then(res => {
+                    const data = res.data
+                    let randomIndex = Math.floor(Math.random() * data.random.length)
+                    this.random = data.random[randomIndex]
+                    console.log(this.random)
+                }).catch(err => {
+                    console.log(err);
+                })
             }
         },
         components: {
             scroll,
-            hotSearch
+            hotSearch,
+            flapCard
         },
         watch: {
             offsetY(newVal) {

@@ -1,7 +1,6 @@
 <template>
     <div class="library-wrapper">
         <search-bar></search-bar>
-        <flap-card></flap-card>
     </div>
 </template>
 
@@ -13,8 +12,7 @@
     export default {
         mixins: [storeMixin],
         components: {
-            searchBar,
-            flapCard
+            searchBar
         }
     }
 </script>
